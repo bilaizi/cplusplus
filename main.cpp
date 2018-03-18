@@ -628,17 +628,16 @@ void Logger::processEntries(){
 	lock.unlock();
 	while(true){
 	    lock.lock();
-	    if(mQueue.empty()) {
+	    if(mQueue.empty())
 		break;
-	    } else {
+	    else {
 		logFile << mQueue.front() << endl;
 		mQueue.pop();
 	    }
 	    lock.unlock();
 	}
-	if(mExit) {
+	if(mExit) 
 	    break;
-	}
     }
 }
 
@@ -659,9 +658,7 @@ int main(){
     vector<thread> threads;
     // Create a few threads all working with the same Logger instance.
     for(int i = 0; i < 10; ++i) {
-        threads.emplace_back(logSomeMessages, i, ref(logger));
-	// The above is equivalent to:
-	// threads.push_back(thread{ logSomeMessages, i, ref(logger) });
+        threads.emplace_back(logSomeMessages, i, ref(logger));// threads.push_back(thread{ logSomeMessages, i, ref(logger) });
     }
     // Wait for all threads to finish.
     for(auto& t : threads) {
