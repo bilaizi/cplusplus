@@ -132,10 +132,8 @@ auto main()->int{
     std::cout << "Thread 1 received the signal " << res1.get().count() << " ms after start\n"
               << "Thread 2 received the signal " << res2.get().count() << " ms after start\n";
 }
-/*
-Thread 1 received the signal 378511 ms after start
-Thread 2 received the signal 39401 ms after start
-*/
+//Thread 1 received the signal 378511 ms after start
+//Thread 2 received the signal 39401 ms after start
 */
 
 /*
