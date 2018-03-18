@@ -596,7 +596,7 @@ Logger::~Logger(){
 void Logger::log(string_view entry){
     // Lock mutex and add entry to the queue.
     unique_lock lock(mMutex);  // C++17
-    mQueue.push(string(entry));
+    mQueue.push(string{entry});//mQueue.emplace(entry);
     // Notify condition variable to wake up thread.
     mCondVar.notify_all();
 }
