@@ -111,13 +111,11 @@ auto main()->int{
     std::chrono::time_point<std::chrono::high_resolution_clock> start;
     auto f1 = [&t1_ready_promised, ready_future] {
 	t1_ready_promised.set_value();
-	// Wait until signal is raised.
 	ready_future.wait(); // waits for the signal from main()
         return std::chrono::high_resolution_clock::now() - start;
     };
     auto f2 = [&t2_ready_promise, ready_future] {
 	t2_ready_promise.set_value();
-	// Wait until signal is raised.
 	ready_future.wait(); // waits for the signal from main()
         return std::chrono::high_resolution_clock::now() - start;
     };
