@@ -124,12 +124,9 @@ auto main()->int{
     // Launch two threads.
     auto res1 = std::async(launch::async, f1);
     auto res2 = std::async(launch::async, f2);
-    // Wait until both threads have started.
     // wait for the threads to become ready
     t1_ready_promise.get_future().wait();
     t2_ready_promise.get_future().wait();
-    // Both threads are now waiting for the signal.
-    // Raise the signal to wake both of them up.
     // the threads are ready, start the clock
     start = std::chrono::high_resolution_clock::now();
     // signal the threads to go
