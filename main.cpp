@@ -78,16 +78,16 @@ auto main()->int{
     promise<int> p;
     auto sf = p.get_future().share();
     //shared_future<int> sf{p.get_future()};
-    auto f1 = [&t1, p] {
+    auto f1 = [&t1, sf] {
         t1.set_value();
 	// Wait until parameter is set.
-	int parameter = p.get();
+	int parameter = sf.get();
 	// ...
     };
-    auto f2 = [&t2, p] {
+    auto f2 = [&t2, sf] {
 	t2.set_value();
 	// Wait until parameter is set.
-	int parameter = p.get();
+	int parameter = sf.get();
 	// ...
     };
 
