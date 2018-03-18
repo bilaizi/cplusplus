@@ -108,7 +108,7 @@ int main(){
     t3.join();
     return 0;
 }
-
+//t1 0~19 t2 0~11 t3 0~9
 #include <mutex>
 
 std::mutex mut1;
