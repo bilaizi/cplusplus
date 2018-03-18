@@ -186,6 +186,45 @@ int main(){
 //true std::atomic<A> is lock free? false
 //true std::atomic<B> is lock free? true
 
+#include <atomic>
+#include <chrono>
+#include <functional>
+#include <iostream>
+#include <thread>
+#include <vector>
+using namespace std;
+using namespace std::chrono_literals;
+
+void increment(atomic<int>& counter){
+	for (int i = 0; i < 100; ++i) {
+		++counter;
+		this_thread::sleep_for(1ms);
+	}
+}
+//optimal
+void increment(atomic<int>& counter){
+    int result = 0;
+    for(int i = 0; i < 100; ++i) {
+	++result;
+	this_thread::sleep_for(1ms);
+    }
+    counter += result;
+}
+int main(){
+    atomic<int> counter{};
+    vector<thread> threads;
+    for (int i = 0; i < 10; ++i) 
+	threads.push_back(thread{ increment, ref(counter) });//threads.emplace_back(func, ref(counter));
+    for (auto& t : threads) 
+	t.join();
+    cout << "Result = " << counter << endl;
+    atomic<int> value{10};
+    cout << "Value = " << value << endl;
+    int fetched = value.fetch_add(4);
+    cout << "Fetched = " << fetched << endl;
+    cout << "Value = " << value << endl;
+    return 0;
+}
 
 #include <iostream>
 #include <mutex>
@@ -495,6 +534,141 @@ auto main()->int{
 }
 //Thread 1 received the signal 378511 ms after start
 //Thread 2 received the signal 39401 ms after start
+
+
+#pragma once
+#include <condition_variable>
+#include <mutex>
+#include <queue>
+#include <string>
+#include <string_view>
+#include <thread>
+
+class Logger{
+public:
+	// Starts a background thread writing log entries to a file.
+	Logger();
+	// Gracefully shut down background thread.
+	virtual ~Logger();
+	// Prevent copy construction and assignment.
+	Logger(const Logger& src) = delete;
+	Logger& operator=(const Logger& rhs) = delete;
+	// Add log entry to the queue.
+	void log(std::string_view entry);
+private:
+	// The function running in the background thread.
+	void processEntries();
+	// Boolean telling the background thread to terminate.
+	bool mExit = false;
+	// Mutex and condition variable to protect access to the queue.
+	std::mutex mMutex;
+	std::condition_variable mCondVar;
+	std::queue<std::string> mQueue;
+	// The background thread.
+	std::thread mThread;
+};
+
+
+#include <chrono>
+#include <fstream>
+#include <iostream>
+#include "Logger.h"
+using namespace std;
+
+Logger::Logger(){
+	// Start background thread.
+	mThread = thread{&Logger::processEntries, this};
+}
+
+Logger::~Logger(){
+    {
+	unique_lock lock(mMutex);  // C++17
+	// Gracefully shut down the thread by setting mExit to true and notifying the thread.
+	mExit = true;
+	// Notify condition variable to wake up thread.
+	mCondVar.notify_all();
+    }
+    // Wait until thread is shut down. This should be outside the above code block 
+    // because the lock must be released before calling join()!
+    mThread.join();
+}
+
+void Logger::log(string_view entry){
+    // Lock mutex and add entry to the queue.
+    unique_lock lock(mMutex);  // C++17
+    mQueue.push(string(entry));
+    // Notify condition variable to wake up thread.
+    mCondVar.notify_all();
+}
+
+void Logger::processEntries(){
+    // Open log file.
+    ofstream logFile("log.txt");
+    if (logFile.fail()) {
+	cerr << "Failed to open logfile." << endl;
+	return;
+    }
+    // Start processing loop.
+    unique_lock lock(mMutex);  // C++17
+    while(true){
+	// You can add artificial delays on specific places in your multithreaded
+        // code to trigger certain behavior. Note that such delays should only be
+	// added for testing, and should be removed from your final code!
+	//
+	// For example, in this Logger class, you could add the following delay
+	// to test that the race-condition with the destructor as discussed
+	// in Chapter 23 is solved.
+	//this_thread::sleep_for(1000ms); // Needs #include <chrono>
+
+	if(!mExit) { // Only wait for notifications if we don't have to exit.
+	     // Wait for a notification.
+	     mCondVar.wait(lock);
+	}
+	// Condition variable is notified, so something might be in the queue and/or we need to shut down this thread.
+	lock.unlock();
+	while(true){
+	    lock.lock();
+	    if(mQueue.empty()) {
+		break;
+	    } else {
+		logFile << mQueue.front() << endl;
+		mQueue.pop();
+	    }
+	    lock.unlock();
+	}
+	if(mExit) {
+	    break;
+	}
+    }
+}
+
+#include <thread>
+#include <vector>
+using namespace std;
+
+void logSomeMessages(int id, Logger& logger){
+    for(int i = 0; i < 10; ++i) {
+	stringstream ss;
+	ss << "Log entry " << i << " from thread " << id;
+	logger.log(ss.str());
+    }
+}
+
+int main(){
+    Logger logger;
+    vector<thread> threads;
+    // Create a few threads all working with the same Logger instance.
+    for(int i = 0; i < 10; ++i) {
+        threads.emplace_back(logSomeMessages, i, ref(logger));
+	// The above is equivalent to:
+	// threads.push_back(thread{ logSomeMessages, i, ref(logger) });
+    }
+    // Wait for all threads to finish.
+    for(auto& t : threads) {
+	t.join();
+    }
+    return 0;
+}
 */
 
 /*
