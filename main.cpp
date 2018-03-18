@@ -124,13 +124,11 @@ int main(){
     t2.join();
 }
 
-#include <mutex>
-#include <thread>
 #include <iostream>
-#include <vector>
-#include <functional>
-#include <chrono>
+#include <mutex>
 #include <string>
+#include <thread>
+#include <vector>
  
 struct Employee {
     Employee(std::string id) : id{id} {}
