@@ -70,10 +70,9 @@ struct year {
 
 
 /* 
-#include <thread>
 #include <iostream>
 #include <mutex>
-
+#include <thread>
 using namespace std;
 
 class Counter{
@@ -112,6 +111,11 @@ int main(){
 
 
 #include <chrono>
+#include <iostream>
+#include <mutex>
+#include <thread>
+using namespace std;
+
 class Counter{
 public:
     Counter(int id, int numIterations)
@@ -120,7 +124,7 @@ public:
     void operator()() const{
 	for(int i = 0; i < mNumIterations; ++i) {
 	    using namespace std::chrono_literals;
-	    unique_lock<timed_mutex> lock{mTimedMutex, 200ms};
+	    unique_lock lock{mTimedMutex, 200ms};
 	    if(lock) {
 		cout << "Counter " << mId << " has value " << i << endl;
 	    } else {
@@ -133,8 +137,43 @@ private:
     int mNumIterations;
     static timed_mutex mTimedMutex;
 };
-
 timed_mutex Counter::mTimedMutex;
+
+#include <atomic>
+#include <iostream>
+#include <mutex>
+#include <thread>
+#include <vector>
+
+using namespace std;
+
+void initializeSharedResources(){
+    // ... Initialize shared resources that will be used by multiple threads.
+    cout << "Shared resources initialized." << endl;
+}
+atomic<bool> initialized(false);
+mutex mut;
+
+void func(){
+    if(!initialized) {
+        unique_lock lock(mut);
+        if (!initialized) {
+            initializeSharedResources();
+	    initialized = true;
+	}
+    }
+    cout << "OK" << endl;
+}
+
+int main(){
+    vector<thread> threads;
+    for (int i = 0; i < 5; ++i) 
+	threads.push_back(thread{ func });
+    for (auto& t : threads) 
+	t.join();
+    return 0;
+}
+
 
 #include <mutex>
 
