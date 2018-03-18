@@ -69,7 +69,41 @@ struct year {
 // 
 
 /* 
+#include <future>
 
+using namespace std;
+
+auto main()->int{
+    promise<void> t1, t2;
+    promise<int> p;
+    auto f = p.get_future().share();
+    //shared_future<int> signalFuture{p.get_future()};
+    auto f1 = [&t1, p] {
+        t1.set_value();
+	// Wait until parameter is set.
+	int parameter = p.get();
+	// ...
+    };
+    auto f2 = [&t2, p] {
+	t2.set_value();
+	// Wait until parameter is set.
+	int parameter = signalFuture.get();
+	// ...
+    };
+
+	// Run both lambda expressions asynchronously.
+	// Remember to capture the future returned by async()!
+	auto result1 = async(launch::async, function1);
+	auto result2 = async(launch::async, function2);
+
+	// Wait until both threads have started.
+	thread1Started.get_future().wait();
+	thread2Started.get_future().wait();
+
+	// Both threads are now waiting for the parameter.
+	// Set the parameter to wake up both of them.
+	signalPromise.set_value(42);
+}
 */
 
 /*
