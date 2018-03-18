@@ -551,7 +551,7 @@ public:
 	// Gracefully shut down background thread.
 	virtual ~Logger();
 	// Prevent copy construction and assignment.
-	Logger(const Logger& src) = delete;
+	Logger(const Logger& other) = delete;
 	Logger& operator=(const Logger& rhs) = delete;
 	// Add log entry to the queue.
 	void log(std::string_view entry);
