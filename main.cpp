@@ -167,6 +167,25 @@ int main(){
     return 0;
 }
 
+#include <atomic>
+#include <iostream>
+#include <type_traits>
+#include <utility>
+
+struct A { int a[100]; };
+struct B { int x, y; };
+int main(){
+    std::cout << std::boolalpha 
+        << std::is_trivially_copyable_v<A> << " " 
+        << "std::atomic<A> is lock free? "
+        << std::atomic<A>{}.is_lock_free() << '\n'
+        << std::is_trivially_copyable_v<B> << " " 
+        << "std::atomic<B> is lock free? "
+        << std::atomic<B>{}.is_lock_free() << '\n';
+}
+//true std::atomic<A> is lock free? false
+//true std::atomic<B> is lock free? true
+
 
 #include <iostream>
 #include <mutex>
