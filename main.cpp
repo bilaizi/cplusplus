@@ -100,6 +100,43 @@ auto main()->int{
     // Set the parameter to wake up both of them.
     p.set_value(42);
 }
+
+#include <chrono>
+#include <future>
+#include <iostream>
+
+auto main()->int{	
+    std::promise<void> ready_promise, t1_ready_promise, t2_ready_promise;
+    std::shared_future<void> ready_future{ ready_promise.get_future() };
+    std::chrono::time_point<std::chrono::high_resolution_clock> start;
+    auto f1 = [&t1_ready_promised, ready_future] {
+	t1_ready_promised.set_value();
+	// Wait until signal is raised.
+	ready_future.wait(); // waits for the signal from main()
+        return std::chrono::high_resolution_clock::now() - start;
+    };
+    auto f2 = [&t2_ready_promise, ready_future] {
+	t2_ready_promise.set_value();
+	// Wait until signal is raised.
+	ready_future.wait(); // waits for the signal from main()
+        return std::chrono::high_resolution_clock::now() - start;
+    };
+    // Launch two threads.
+    auto res1 = std::async(launch::async, f1);
+    auto res2 = std::async(launch::async, f2);
+    // Wait until both threads have started.
+    // wait for the threads to become ready
+    t1_ready_promise.get_future().wait();
+    t2_ready_promise.get_future().wait();
+    // Both threads are now waiting for the signal.
+    // Raise the signal to wake both of them up.
+    // the threads are ready, start the clock
+    start = std::chrono::high_resolution_clock::now();
+    // signal the threads to go
+    ready_promise.set_value()
+    std::cout << "Thread 1 received the signal " << res1.get().count() << " ms after start\n"
+              << "Thread 2 received the signal " << res2.get().count() << " ms after start\n";
+}
 */
 
 /*
