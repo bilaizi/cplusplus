@@ -83,7 +83,7 @@ public:
     }
     void operator()() const{
 	for(int i = 0; i < mNumIterations; ++i) {
-	    lock_guard<mutex> lock(mMutex);
+	    lock_guard lock(mMutex);
 	    cout << "Counter " << mId << " has value " << i << endl;
 	}
     }
