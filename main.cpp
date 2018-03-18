@@ -138,7 +138,21 @@ private:
     static timed_mutex mTimedMutex;
 };
 timed_mutex Counter::mTimedMutex;
-
+int main(){
+    // Using uniform initialization syntax
+    thread t1{ Counter{ 1, 20 } };
+    // Using named variable
+    Counter c{2, 12};
+    thread t2{c};
+    // Using temporary
+    thread t3{Counter{3, 10}};
+    // Wait for threads to finish
+    t1.join();
+    t2.join();
+    t3.join();
+    return 0;
+}
+threads.emplace_back(processingFunction);
 #include <atomic>
 #include <iostream>
 #include <mutex>
@@ -151,24 +165,24 @@ void initializeSharedResources(){
     // ... Initialize shared resources that will be used by multiple threads.
     cout << "Shared resources initialized." << endl;
 }
-atomic<bool> initialized(false);
-mutex mut;
+atomic<bool> gInitialized(false);
+mutex gMutex;
 
-void func(){
-    if(!initialized) {
-        unique_lock lock(mut);
-        if (!initialized) {
-            initializeSharedResources();
-	    initialized = true;
+void processingFunction(){
+    if (!gInitialized) {
+	unique_lock lock(gMutex);  // C++17
+	if (!gInitialized) {
+	    initializeSharedResources();
+	    gInitialized = true;
 	}
     }
     cout << "OK" << endl;
 }
-
 int main(){
     vector<thread> threads;
-    for (int i = 0; i < 5; ++i) 
-	threads.push_back(thread{ func });
+    for (int i = 0; i < 5; ++i) {
+	threads.push_back(thread{ processingFunction });//threads.emplace_back(processingFunction);
+    }
     for (auto& t : threads) 
 	t.join();
     return 0;
