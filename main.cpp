@@ -91,18 +91,18 @@ auto main()->int{
 	// ...
     };
 
-	// Run both lambda expressions asynchronously.
-	// Remember to capture the future returned by async()!
-	auto result1 = async(launch::async, function1);
-	auto result2 = async(launch::async, function2);
+    // Run both lambda expressions asynchronously.
+    // Remember to capture the future returned by async()!
+    auto r1 = async(launch::async, f1);
+    auto r2 = async(launch::async, f2);
 
-	// Wait until both threads have started.
-	thread1Started.get_future().wait();
-	thread2Started.get_future().wait();
+    // Wait until both threads have started.
+    t1.get_future().wait();
+    t2.get_future().wait();
 
-	// Both threads are now waiting for the parameter.
-	// Set the parameter to wake up both of them.
-	signalPromise.set_value(42);
+    // Both threads are now waiting for the parameter.
+    // Set the parameter to wake up both of them.
+    p.set_value(42);
 }
 */
 
