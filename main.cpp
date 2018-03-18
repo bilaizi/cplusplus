@@ -76,8 +76,8 @@ using namespace std;
 auto main()->int{
     promise<void> t1, t2;
     promise<int> p;
-    auto f = p.get_future().share();
-    //shared_future<int> signalFuture{p.get_future()};
+    auto sf = p.get_future().share();
+    //shared_future<int> sf{p.get_future()};
     auto f1 = [&t1, p] {
         t1.set_value();
 	// Wait until parameter is set.
@@ -87,7 +87,7 @@ auto main()->int{
     auto f2 = [&t2, p] {
 	t2.set_value();
 	// Wait until parameter is set.
-	int parameter = signalFuture.get();
+	int parameter = p.get();
 	// ...
     };
 
