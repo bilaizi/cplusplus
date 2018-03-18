@@ -109,6 +109,33 @@ int main(){
     return 0;
 }
 //t1 0~19 t2 0~11 t3 0~9
+
+
+#include <chrono>
+class Counter{
+public:
+    Counter(int id, int numIterations)
+	: mId{ id }, mNumIterations{ numIterations }{
+    }
+    void operator()() const{
+	for(int i = 0; i < mNumIterations; ++i) {
+	    using namespace std::chrono_literals;
+	    unique_lock<timed_mutex> lock{mTimedMutex, 200ms};
+	    if(lock) {
+		cout << "Counter " << mId << " has value " << i << endl;
+	    } else {
+		// Lock not acquired in 200 ms
+	    }
+	}
+    }
+private:
+    int mId;
+    int mNumIterations;
+    static timed_mutex mTimedMutex;
+};
+
+timed_mutex Counter::mTimedMutex;
+
 #include <mutex>
 
 std::mutex mut1;
