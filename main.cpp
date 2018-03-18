@@ -87,6 +87,45 @@ int main(){
 
 #include <mutex>
 #include <thread>
+#include <chrono>
+ 
+struct Account {
+    explicit Account(int balance) :balance{balance} {}
+    double balance;
+    std::mutex m;
+};
+ 
+void transfer(Account &from,Account &to, int amount){
+    // don't actually take the locks yet
+    std::unique_lock lock1(from.m, std::defer_lock);// C++17
+    std::unique_locklock2(to.m, std::defer_lock);// C++17
+    // lock both unique_locks without deadlock
+    std::lock(lock1, lock2);
+    from.balance -= amount;
+    to.balance += amount;
+    // 'from.m' and 'to.m' mutexes unlocked in 'unique_lock' dtors
+}
+ void transfer(Account &from,Account &to, int amount){
+    // lock both mutexes without deadlock
+    std::lock(from.m, to.m);
+    // make sure both already-locked mutexes are unlocked at the end of scope
+    std::lock_guard lock1(from.m, std::adopt_lock);// C++17
+    std::lock_guar lock2(to.m, std::adopt_lock);// C++17
+    from.balance -= amount;
+    to.balance += amount;
+    // 'from.m' and 'to.m' mutexes unlocked in 'unique_lock' dtors
+}
+int main(){
+    Account a{100};
+    Account b{50};
+    std::thread t1(transfer, std::ref(a), std::ref(b), 10);
+    std::thread t2(transfer, std::ref(b), std::ref(a), 5);
+    t1.join();
+    t2.join();
+}
+
+#include <mutex>
+#include <thread>
 #include <iostream>
 #include <vector>
 #include <functional>
@@ -100,7 +139,7 @@ struct Employee {
     std::mutex m;
     std::string output() const{
         std::string ret = "Employee " + id + " has lunch partners: ";
-        for( const auto& partner : lunch_partners )
+        for(const auto& partner : lunch_partners)
             ret += partner + " ";
         return ret;
     }
@@ -114,7 +153,7 @@ void send_mail(Employee &, Employee &){
 void assign_lunch_partner(Employee &e1, Employee &e2){
     static std::mutex io_mutex;
     {
-        std::lock_guard<std::mutex> lk(io_mutex);
+        std::lock_guard lk(io_mutex);// C++17
         std::cout << e1.id << " and " << e2.id << " are waiting for locks" << std::endl;
     }
     {
@@ -125,15 +164,15 @@ void assign_lunch_partner(Employee &e1, Employee &e2){
  
         // Equivalent code 1 (using std::lock and std::lock_guard)
         // std::lock(e1.m, e2.m);
-        // std::lock_guard<std::mutex> lk1(e1.m, std::adopt_lock);
-        // std::lock_guard<std::mutex> lk2(e2.m, std::adopt_lock);
+        // std::lock_guard lk1(e1.m, std::adopt_lock);// C++17
+        // std::lock_guard lk2(e2.m, std::adopt_lock);// C++17
  
         // Equivalent code 2 (if unique_locks are needed, e.g. for condition variables)
-        // std::unique_lock<std::mutex> lk1(e1.m, std::defer_lock);
-        // std::unique_lock<std::mutex> lk2(e2.m, std::defer_lock);
+        // std::unique_lock lk1(e1.m, std::defer_lock);// C++17
+        // std::unique_lock lk2(e2.m, std::defer_lock);// C++17
         // std::lock(lk1, lk2);
         {
-            std::lock_guard<std::mutex> lk(io_mutex);
+            std::lock_guard lk(io_mutex);// C++17
             std::cout << e1.id << " and " << e2.id << " got locks" << std::endl;
         }
         e1.lunch_partners.push_back(e2.id);
