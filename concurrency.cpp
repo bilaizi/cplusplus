@@ -56,8 +56,9 @@ public:
     thread_pool():done(false),joiner(threads){
         unsigned const thread_count=std::thread::hardware_concurrency();
         try{
-            for(unsigned i=0;i<thread_count;++i)
-                threads.push_back(std::thread(&thread_pool::worker_thread,this));
+            for(unsigned i{};i<thread_count;++i)
+                //threads.push_back(std::thread(&thread_pool::worker_thread,this));
+		threads.emplace_back(&thread_pool::worker_thread,this);
         }catch(...){
             done=true;
             throw;
