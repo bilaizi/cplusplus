@@ -17,6 +17,73 @@ int main(int argc, char* argv[]){
     return 0;
 }
 /*
+//bank_account_1.cpp
+#include <iostream>
+#include <boost/asio/ts/executor.hpp>
+#include <boost/asio/thread_pool.hpp>
+using namespace boost::asio;
+//using boost::asio::post;
+//using boost::asio::thread_pool;
+
+// Traditional active object pattern.
+// Member functions do not block.
+class bank_account{
+    int balance_ {};
+    mutable thread_pool pool_{1};
+public:
+    void deposit(int amount) {
+        post(pool_, [=] {  balance_ += amount; });
+    }
+    void withdraw(int amount) {
+        post(pool_, [=] { if (balance_ >= amount) balance_ -= amount; });
+    }
+    void print_balance() const {
+        post(pool_, [=] { std::cout << "balance = " << balance_ << "\n"; });
+    }
+    ~bank_account() {
+      pool_.join();
+    }
+};
+
+int main(){
+    bank_account acct;
+    acct.deposit(20);
+    acct.withdraw(10);
+    acct.print_balance();
+}
+
+//bank_account_2.cpp
+#include <iostream>
+#include <boost/asio/ts/executor.hpp>
+#include <boost/asio/thread_pool.hpp>
+using namespace boost::asio;
+//using boost::asio::post;
+//using boost::asio::thread_pool;
+//using boost::asio::use_future;
+
+// Traditional active object pattern.
+// Member functions block until operation is finished.
+class bank_account{
+    int balance_{};
+    mutable thread_pool pool_{ 1 };
+public:
+    void deposit(int amount) {
+        post(pool_, use_future([=] { balance_ += amount; })).get();
+    }
+    void withdraw(int amount) {
+        post(pool_, use_future([=] { if (balance_ >= amount) balance_ -= amount; })).get();
+    }
+    int balance() const{
+        return post(pool_, use_future([=] { return balance_; })).get();
+    }
+};
+int main(){
+    bank_account acct;
+    acct.deposit(20);
+    acct.withdraw(10);
+    std::cout << "balance = " << acct.balance() << "\n";
+}
+
 // fork_join.cpp
 #include <algorithm>
 #include <iostream>
