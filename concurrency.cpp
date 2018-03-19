@@ -78,7 +78,6 @@ void parallel_partial_sum(Iterator first,Iterator last){
     const unsigned long hardware_threads = std::thread::hardware_concurrency();
     const unsigned long num_threads = std::min(hardware_threads != 0 ? hardware_threads : 2, max_threads);
     const unsigned long block_size = length / num_threads;
-    typedef typename Iterator::value_type value_type;
     std::vector<std::thread> threads(num_threads-1);
     std::vector<std::promise<value_type>> end_values(num_threads-1);
     std::vector<std::future<value_type>> previous_end_values;
