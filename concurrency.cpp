@@ -39,6 +39,26 @@ function object in new thread is created by: move constructor
 /*
 
 // Chapter8
+
+// listing_8.12.cpp
+class barrier{
+    unsigned const count;
+    std::atomic<unsigned> spaces;
+    std::atomic<unsigned> generation;
+public:
+    explicit barrier(unsigned count_):count{ count_ }, spaces{ count_ }, generation{0}{}
+    void wait(){
+        unsigned const gen=generation;
+        if(!--spaces){
+            spaces=count;
+            ++generation;
+        }else{
+            while(generation==gen)
+                std::this_thread::yield();
+        }
+    }
+};
+
 // listing_8.13.cpp
 #include <atomic>
 #include <thread>
@@ -52,7 +72,7 @@ struct barrier{
     std::atomic<unsigned> count;
     std::atomic<unsigned> spaces;
     std::atomic<unsigned> generation;
-    barrier(unsigned count_):count{ count_ }, spaces{ count_ }, generation(0){}
+    explicit barrier(unsigned count_):count{ count_ }, spaces{ count_ }, generation(0){}
     void wait(){
         unsigned const gen=generation.load();
         if(!--spaces){
