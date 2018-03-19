@@ -66,6 +66,33 @@ struct year {
     int value;
 };
 
+// function template
+template <typename T>
+void Swap(T& a, T& b){
+    T c;
+    c = b;
+    b = a;
+    a = c;
+}
+// class template
+template <typename T>
+class Array{
+protected:
+    T* arr;
+public:
+    Array(size_t s = 10){
+        arr = new T[s];
+    }
+    ~Array() {
+        delete [] arr;
+    }
+    void Set(size_t index, T input){
+        arr[index] = input;
+    }
+    T& Get(size_t index){
+        return arr[index];
+    }
+};
 // 
 
 
