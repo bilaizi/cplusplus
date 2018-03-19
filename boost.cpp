@@ -30,14 +30,9 @@ int main(int argc, char* argv[]){
 #include <boost/asio/ts/netfwd.hpp>
 #include <boost/asio/ts/timer.hpp>
 #include <boost/asio/ts/socket.hpp>
-
 using namespace std::chrono_literals;
 using namespace boost::asio;
 using namespace boost::asio::ip;
-//using boost::asio::io_context;
-//using boost::asio::steady_timer;
-//using boost::asio::ip::tcp;
-
 //
 // reference_counted.cpp
 // 
@@ -46,22 +41,18 @@ using namespace boost::asio::ip;
 // A reference-counted non-modifiable buffer class.
 class shared_const_buffer{
 public:
-  // Construct from a std::string.
-  explicit shared_const_buffer(const std::string& data)
-    : data_(new std::vector<char>(data.begin(), data.end())),
-      buffer_(buffer(*data_))
-  {
-  }
-
-  // Implement the ConstBufferSequence requirements.
-  typedef const_buffer value_type;
-  typedef const const_buffer* const_iterator;
-  const const_buffer* begin() const { return &buffer_; }
-  const const_buffer* end() const { return &buffer_ + 1; }
-
+    // Construct from a std::string.
+    explicit shared_const_buffer(const std::string& data)
+        : data_{ new std::vector<char>(data.begin(), data.end()) }, buffer_{ buffer(*data_) }{
+    }
+    // Implement the ConstBufferSequence requirements.
+    typedef const_buffer value_type;
+    typedef const const_buffer* const_iterator;
+    const const_buffer* begin() const { return &buffer_; }
+    const const_buffer* end() const { return &buffer_ + 1; }
 private:
-  std::shared_ptr<std::vector<char>> data_;
-  const_buffer buffer_;
+    std::shared_ptr<std::vector<char>> data_;
+    const_buffer buffer_;
 };
 
 class session : public std::enable_shared_from_this<session>{
@@ -75,7 +66,7 @@ private:
         auto now{ std::time(0) };
         shared_const_buffer buffer{ std::ctime(&now) };
         auto self{ shared_from_this()};
-        boost::asio::async_write(socket_, buffer, [this, self](boost::system::error_code /*ec*/, std::size_t /*length*/){});
+        boost::asio::async_write(socket_, buffer, [this, self](boost::system::error_code, std::size_t ){});
     }
     // The socket used to communicate with the client.
     tcp::socket socket_;
@@ -83,21 +74,20 @@ private:
 
 class server{
 public:
-  server(io_context& io_context, short port): acceptor_(io_context, tcp::endpoint(tcp::v4(), port)){
-    do_accept();
-  }
-
+    server(io_context& io_context, short port): acceptor_(io_context, tcp::endpoint(tcp::v4(), port)){
+        do_accept();
+    }
 private:
-  void do_accept(){
-    acceptor_.async_accept(
-        [this](boost::system::error_code ec, tcp::socket socket){
-          if (!ec)
-            std::make_shared<session>(std::move(socket))->start();
-          do_accept();
-        }
-    );
-  }
-  tcp::acceptor acceptor_;
+    void do_accept(){
+        acceptor_.async_accept(
+            [this](boost::system::error_code ec, tcp::socket socket){
+                if(!ec)
+                    std::make_shared<session>(std::move(socket))->start();
+                do_accept();
+            }
+        );
+    }
+    tcp::acceptor acceptor_;
 };
 
 int main(int argc, char* argv[]){
