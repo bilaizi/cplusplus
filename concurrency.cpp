@@ -199,7 +199,7 @@ T parallel_accumulate(Iterator first,Iterator last,T init){
         return init;
     unsigned long const block_size=25;
     unsigned long const num_blocks=(length+block_size-1)/block_size;
-    std::vector<std::future<T> > futures(num_blocks-1);
+    std::vector<std::future<T>> futures(num_blocks-1);
     thread_pool pool;
     Iterator block_start=first;
     for(unsigned long i{};i<(num_threads-1);++i){
