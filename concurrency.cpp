@@ -70,7 +70,7 @@ void parallel_partial_sum(Iterator first,Iterator last){
             }
         }
     };
-    unsigned long const length=std::distance(first,last);
+    const unsigned long length=std::distance(first,last);
     if(!length)
         return last;
     const unsigned long min_per_thread = 25;
