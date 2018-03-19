@@ -9,11 +9,11 @@ public:
         std::cout << "function object in new thread is created by: " + s << std::endl;
     }
     C() = default;
-    C(const C& another) {
+    C(const C& other) {
         s = "copy constructor";
         std::cout << s << std::endl;
     }
-    C(C&& another) {
+    C(C&& other) {
         s = "move constructor";
         std::cout << s << std::endl;
     }
