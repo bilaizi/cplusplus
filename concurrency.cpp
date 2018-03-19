@@ -43,26 +43,26 @@ function object in new thread is created by: move constructor
 template<typename Iterator,typename MatchType>
 Iterator parallel_find_impl(Iterator first, Iterator last, MatchType match, std::atomic<bool>& done){
     try{
-        const unsigned long length=std::distance(first,last);
-        const unsigned long min_per_thread=25;
+        const unsigned long length = std::distance(first, last);
+        const unsigned long min_per_thread = 25;
         if(length<(2*min_per_thread)){
-            for(; (first!=last) && !done.load();++first){
-                if(*first==match){
-                    done=true;
+            for(; (first != last) && !done.load(); ++first){
+                if(*first == match){
+                    done = true;
                     return first;
                 }
             }
             return last;
         }else{
-            Iterator const mid_point=first+(length/2);
-            std::future<Iterator> async_result=std::async(
+            const Iterator mid_point = first + length / 2;
+            std::future<Iterator> async_result = std::async(
 	        &parallel_find_impl<Iterator, MatchType>,
                 mid_point,
 		last,
 		match,
 		std::ref(done)
             );
-            Iterator const direct_result = parallel_find_impl(first,mid_point,match,done);
+            Iterator const direct_result = parallel_find_impl(first, mid_point, match, done);
             return direct_result==mid_point ? async_result.get() : direct_result;
         }
     }catch(...){
@@ -70,7 +70,7 @@ Iterator parallel_find_impl(Iterator first, Iterator last, MatchType match, std:
         throw;
     }
 }
-template<typename Iterator,typename MatchType>
+template<typename Iterator, typename MatchType>
 Iterator parallel_find(Iterator first, Iterator last, MatchType match){
     std::atomic<bool> done{ false };
     return parallel_find_impl(first, last, match, done);
