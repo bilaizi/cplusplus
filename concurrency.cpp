@@ -76,8 +76,8 @@ void parallel_partial_sum(Iterator first,Iterator last){
     const unsigned long min_per_thread = 25;
     const unsigned long max_threads = (length + min_per_thread - 1) / min_per_thread;
     const unsigned long hardware_threads = std::thread::hardware_concurrency();
-    const unsigned long num_threads= std::min(hardware_threads!=0?hardware_threads:2,max_threads);
-    const unsigned long block_size=length/num_threads;
+    const unsigned long num_threads = std::min(hardware_threads != 0 ? hardware_threads : 2, max_threads);
+    const unsigned long block_size = length / num_threads;
     typedef typename Iterator::value_type value_type;
     std::vector<std::thread> threads(num_threads-1);
     std::vector<std::promise<value_type>> end_values(num_threads-1);
@@ -85,7 +85,7 @@ void parallel_partial_sum(Iterator first,Iterator last){
     previous_end_values.reserve(num_threads-1);
     join_threads joiner(threads);
     Iterator block_start=first;
-    for(unsigned long i=0;i<(num_threads-1);++i){
+    for(unsigned long i{}; i < num_threads-1; ++i){
         Iterator block_last=block_start;
         std::advance(block_last,block_size-1);
         threads[i]=std::thread(process_chunk(), block_start,block_last, (i!=0) ? &previous_end_values[i-1] : 0, &end_values[i]);
@@ -94,8 +94,8 @@ void parallel_partial_sum(Iterator first,Iterator last){
         previous_end_values.push_back(end_values[i].get_future());
     }
     Iterator final_element=block_start;
-    std::advance(final_element,std::distance(block_start,last)-1);
-    process_chunk()(block_start, final_element, (num_threads>1)?&previous_end_values.back():0, 0);
+    std::advance(final_element, std::distance(block_start, last)-1);
+    process_chunk()(block_start, final_element, (num_threads > 1) ? &previous_end_values.back() : 0, 0);
 }
 
 // listing_8.12.cpp
