@@ -27,3 +27,11 @@ auto main()->int {
     t2.join();
     return 0;
 }
+/*
+copy constructor
+move constructor
+function object in new thread is created by: move constructor
+move constructor
+move constructor
+function object in new thread is created by: move constructor
+*/
