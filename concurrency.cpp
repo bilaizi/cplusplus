@@ -37,6 +37,24 @@ function object in new thread is created by: move constructor
 */
 
 /*
+class X{
+    mutable std::mutex m;
+    int data;
+public:
+    X():data{0}{}
+    auto get_value() const ->int{
+        std::lock_guard guard(m);
+        return data;
+    }
+    void increment(){
+        std::lock_guard guard(m);
+        ++data;
+    }
+};
+void increment_all(std::vector<X>& v){
+    std::for_each(std::execution::par,v.begin(), v.end(), [](X& x){ x.increment(); });
+}
+
 #include <numeric>
 #include <string>
 #include <unordered_map>
