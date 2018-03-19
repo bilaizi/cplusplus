@@ -101,16 +101,16 @@ void parallel_partial_sum(Iterator first,Iterator last){
         void operator()(Iterator first, Iterator last, std::vector<value_type>& buffer, unsigned i, barrier& b){
             value_type& ith_element=*(first+i);
             bool update_source=false;
-            for(unsigned step{},stride{1};stride<=i;++step,stride*=2){
+            for(unsigned step{}, stride{1}; stride <= i; ++step, stride *= 2){
                 const value_type& source = (step % 2) ? buffer[i] : ith_element;
                 value_type& dest = (step % 2) ? ith_element : buffer[i];
-                const value_type& addend = (step % 2) ? buffer[i-stride] : *(first+i-stride);
-                dest=source+addend;
-                update_source=!(step%2);
+                const value_type& addend = (step % 2) ? buffer[i-stride] : *(first + i - stride);
+                dest = source + addend;
+                update_source = !(step % 2);
                 b.wait();
             }
             if(update_source)
-                ith_element=buffer[i];
+                ith_element = buffer[i];
             b.done_waiting();
         }
     };
