@@ -102,9 +102,9 @@ void parallel_partial_sum(Iterator first,Iterator last){
             value_type& ith_element=*(first+i);
             bool update_source=false;
             for(unsigned step{},stride{1};stride<=i;++step,stride*=2){
-                value_type const& source=(step%2)? buffer[i] : ith_element;
-                value_type& dest=(step%2) ? ith_element : buffer[i];
-                value_type const& addend=(step%2) ? buffer[i-stride] : *(first+i-stride);
+                const value_type& source = (step % 2) ? buffer[i] : ith_element;
+                value_type& dest = (step % 2) ? ith_element : buffer[i];
+                const value_type& addend = (step % 2) ? buffer[i-stride] : *(first+i-stride);
                 dest=source+addend;
                 update_source=!(step%2);
                 b.wait();
