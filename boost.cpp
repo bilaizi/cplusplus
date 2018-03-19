@@ -43,7 +43,7 @@ class shared_const_buffer{
 public:
     // Construct from a std::string.
     explicit shared_const_buffer(const std::string& data)
-        : data_{ new std::vector<char>(data.begin(), data.end()) }, buffer_{ buffer(*data_) }{
+        : data_{ new std::vector<char>{ data.begin(), data.end() } }, buffer_{ buffer(*data_) }{
     }
     // Implement the ConstBufferSequence requirements.
     typedef const_buffer value_type;
