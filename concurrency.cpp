@@ -74,7 +74,7 @@ Iterator parallel_find(Iterator first, Iterator last, MatchType match){
     const unsigned long min_per_thread = 25;
     const unsigned long max_threads = (length + min_per_thread - 1) / min_per_thread;
     const unsigned long hardware_threads = std::thread::hardware_concurrency();
-    const unsigned long num_threads = std::min(hardware_threads != 0 ?hardware_threads : 2, max_threads);
+    const unsigned long num_threads = std::min(hardware_threads != 0 ? hardware_threads : 2, max_threads);
     const unsigned long block_size = length / num_threads;
     std::promise<Iterator> result;
     std::atomic<bool> done{ false };
