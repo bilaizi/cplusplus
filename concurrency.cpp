@@ -60,8 +60,7 @@ void parallel_partial_sum(Iterator first,Iterator last){
                     if(end_value)
                         end_value->set_value(*last);
                     std::for_each(begin, last, [addend](value_type& item){ item+=addend; });
-                }
-                else if(end_value)
+                }else if(end_value)
                     end_value->set_value(*last);
             }catch(...){
                 if(end_value)
