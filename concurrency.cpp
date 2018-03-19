@@ -45,7 +45,7 @@ Iterator parallel_find_impl(Iterator first, Iterator last, MatchType match, std:
     try{
         const unsigned long length = std::distance(first, last);
         const unsigned long min_per_thread = 25;
-        if(length<(2*min_per_thread)){
+        if(length < 2 * min_per_thread)){
             for(; (first != last) && !done.load(); ++first){
                 if(*first == match){
                     done = true;
