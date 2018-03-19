@@ -99,8 +99,8 @@ void parallel_partial_sum(Iterator first,Iterator last){
 
     struct process_element{
         void operator()(Iterator first, Iterator last, std::vector<value_type>& buffer, unsigned i, barrier& b){
-            value_type& ith_element=*(first+i);
-            bool update_source=false;
+            value_type& ith_element = *(first+i);
+            bool update_source = false;
             for(unsigned step{}, stride{1}; stride <= i; ++step, stride *= 2){
                 const value_type& source = (step % 2) ? buffer[i] : ith_element;
                 value_type& dest = (step % 2) ? ith_element : buffer[i];
@@ -121,10 +121,10 @@ void parallel_partial_sum(Iterator first,Iterator last){
     barrier b(length);
     std::vector<std::thread> threads(length-1);
     join_threads joiner{ threads };
-    Iterator block_start=first;
-    for(unsigned long i=0;i<(length-1);++i)
-        threads[i]=std::thread(process_element(),first,last,std::ref(buffer),i,std::ref(b));
-    process_element()(first,last,buffer,length-1,b);
+    Iterator block_start =first;
+    for(unsigned long i{}; i < length-1; ++i)
+        threads[i] = std::thread(process_element(), first, last, std::ref(buffer), i,std::ref(b));
+    process_element()(first, last, buffer, length-1, b);
 }
 
 // Chapter9
