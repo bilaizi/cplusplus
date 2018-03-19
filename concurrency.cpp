@@ -140,7 +140,7 @@ T parallel_accumulate(Iterator first,Iterator last,T init){
     }
     T last_result=accumulate_block()(block_start,last);
     T result=init;
-    for(unsigned long i=0;i<(num_blocks-1);++i)
+    for(unsigned long i{};i<(num_blocks-1);++i)
         result+=futures[i].get();
     result += last_result;
     return result;
