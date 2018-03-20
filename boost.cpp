@@ -17,6 +17,60 @@ int main(int argc, char* argv[]){
     return 0;
 }
 /*
+// daytime_client.cpp
+#include <array>
+#include <future>
+#include <iostream>
+#include <thread>
+#include <boost/asio/ts/buffer.hpp>	
+#include <boost/asio/ts/internet.hpp>
+#include <boost/asio/ts/io_context.hpp>
+#include <boost/asio/use_future.hpp>
+using namespace boost::asio;
+using namespace boost::asio::ip;
+//using boost::asio::ip::udp;
+
+void get_daytime(io_context& io_context, const char* hostname){
+    try{
+        udp::resolver resolver{ io_context };
+        std::future<udp::resolver::results_type> endpoints = resolver.async_resolve(udp::v4(), hostname, "daytime", use_future);
+        // The async_resolve operation above returns the endpoints as a future value that is not retrieved ...
+        udp::socket socket{ io_context, udp::v4() };
+        std::array<char, 1> send_buf  = {{ 0 }};
+        // ... until here. This call may block.
+        auto send_length = socket.async_send_to(buffer(send_buf), *endpoints.get().begin(), use_future);
+        // Do other things here while the send completes.
+        send_length.get(); // Blocks until the send is complete. Throws any errors.
+        std::array<char, 128> recv_buf;
+        udp::endpoint sender_endpoint;
+        auto recv_length = socket.async_receive_from(buffer(recv_buf), sender_endpoint, use_future);
+        // Do other things here while the receive completes.
+        std::cout.write(recv_buf.data(), recv_length.get()); // Blocks until receive is complete.
+    }catch (std::system_error& e){
+        std::cerr << e.what() << std::endl;
+    }
+}
+
+auto main(int argc, char* argv[])->int{
+    try{
+        if (argc != 2){
+            std::cerr << "Usage: daytime_client <host>" << std::endl;
+            return 1;
+        }
+        // We run the io_context off in its own thread 
+        // so that it operates completely asynchronously with respect to the rest of the program.
+        io_context io_context;
+        auto work = make_work_guard(io_context);
+        std::thread thread{ [&io_context](){ io_context.run(); } };
+        get_daytime(io_context, argv[1]);
+        io_context.stop();
+        thread.join();
+    } catch (std::exception& e){
+        std::cerr << e.what() << std::endl;
+    }
+    return 0;
+}
+
 //bank_account_1.cpp
 #include <iostream>
 #include <boost/asio/ts/executor.hpp>
