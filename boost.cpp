@@ -89,6 +89,68 @@ auto main(int argc, char* argv[])->int{
     return 0;
 }
 
+// receiver.cpp
+#include <array>
+#include <iostream>
+#include <string>
+#include <boost/asio/ts/internet.hpp>
+#include <boost/asio/ts/io_context.hpp>
+using namespace boost::asio;
+using namespace boost::asio::ip;
+//using boost::asio::ip::udp;
+constexpr short multicast_port = 30001;
+
+class receiver{
+public:
+    receiver(io_context& io_context, const ip::address& listen_address, const ip::address& multicast_address)
+        : socket_(io_context) { 
+            // Create the socket so that multiple may be bound to the same address.
+           ip::udp::endpoint listen_endpoint{ listen_address, multicast_port };
+           socket_.open(listen_endpoint.protocol());
+           socket_.set_option(ip::udp::socket::reuse_address(true));
+           socket_.bind(listen_endpoint);
+           // Join the multicast group.
+           socket_.set_option(ip::multicast::join_group(multicast_address));
+           do_receive();
+    }
+private:
+    void do_receive(){
+        socket_.async_receive_from(
+            buffer(data_), 
+            sender_endpoint_,
+            [this](boost::system::error_code ec, std::size_t length) {
+                if (!ec) {
+                    std::cout.write(data_.data(), length); 
+                    std::cout << std::endl; 
+                    do_receive();
+                }
+            }
+        ); 
+    }
+    ip::udp::socket socket_;
+    ip::udp::endpoint sender_endpoint_;
+    std::array<char, 1024> data_;
+};
+
+auto main(int argc, char* argv[])->int{
+    try {
+        if (argc != 3) {
+            std::cerr << "Usage: receiver <listen_address> <multicast_address>\n";
+            std::cerr << "  For IPv4, try:\n";
+            std::cerr << "    receiver 0.0.0.0 239.255.0.1\n";
+            std::cerr << "  For IPv6, try:\n";
+            std::cerr << "    receiver 0::0 ff31::8000:1234\n";
+            return 1;
+        }
+        io_context io_context;
+        receiver r{ io_context, ip::make_address(argv[1]), ip::make_address(argv[2]) };
+        io_context.run();
+    }catch (std::exception& e) {
+        std::cerr << "Exception: " << e.what() << "\n";
+    }
+    return 0;
+}
+
 // daytime_client.cpp
 #include <array>
 #include <future>
