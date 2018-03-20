@@ -103,7 +103,7 @@ auto get_widget(int id)-> shared_ptr<widget> {
     lock_guard hold{ mut_cache };
     auto sp = cache[id].lock();
     if(!sp) 
-      cache[id] = sp = load_widget( id );
+      cache[id] = sp = load_widget(id);
     return sp;
 }
 
