@@ -97,6 +97,16 @@ public:
 
 
 /* 
+auto get_widget(int id)-> shared_ptr<widget> {
+    static map<int, weak_ptr<widget>> cache;
+    static mutex mut_cache;
+    lock_guard hold{ mut_cache };
+    auto sp = cache[id].lock();
+    if(!sp) 
+      cache[id] = sp = load_widget( id );
+    return sp;
+}
+
 #include <thread>
 #include <iostream>
 using namespace std;
