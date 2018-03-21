@@ -15,7 +15,7 @@ private:
 template<class T>
 class special {
 public:
-    special(T* value) : value_(value) { }
+    special(T* value) : value_{ value } { }
     T* get() const noexcept {
         return value_;
     }
