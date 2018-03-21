@@ -53,6 +53,13 @@ int main() {
 #include <iostream>
 #include <experimental/coroutine>
 
+template <typename R, typename... ArgTypes>
+struct coroutine_traits;
+using promise_type = typename R::promise_type;
+template <typename Promise = void>
+struct coroutine_handle;
+
+
 template <typename... Args> 
 struct std::experimental::coroutine_traits<std::future<void>, Args...> { 
   struct promise_type { 
