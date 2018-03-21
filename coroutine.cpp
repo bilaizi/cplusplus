@@ -64,7 +64,7 @@ template <typename... Args>
 struct std::experimental::coroutine_traits<std::future<void>, Args...> { 
   struct promise_type { 
            std::promise<void> p;
-           void unhandled_exception() {}
+           void unhandled_exception() { std::terminate(); }
            auto get_return_object() { 
                return p.get_future(); 
            } 
