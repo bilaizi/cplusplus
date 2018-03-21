@@ -178,7 +178,6 @@ auto async_await(system_timer& t, std::chrono::duration<R, P> d) {
    }; 
    return Awaiter{ t, d }; 
 } 
-
 std::future<void> sleepy(io_context& io) { 
     system_timer timer{ io }; 
     co_await async_await(timer, 100ms); 
@@ -188,4 +187,11 @@ std::future<void> sleepy(io_context& io) {
     co_await async_await(timer, 100ms); 
     puts("tick3"); 
 }
+int main() {
+    io_context io; 
+    sleepy(io);
+    io.run();  
+    return 0;
+}
+
 */
