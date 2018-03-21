@@ -153,7 +153,7 @@ auto async_await(system_timer& t, std::chrono::duration<R, P> d) {
                throw boost::system::system_error(ec); 
         } 
         void await_suspend(std::experimental::coroutine_handle<> coro) { 
-            t.expires_from_now(d); 
+            t.expires_after(d); 
             t.async_wait([this, coro] (auto ec) mutable { this->ec = ec; coro.resume(); }); 
         } 
    }; 
