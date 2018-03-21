@@ -141,25 +141,6 @@ struct std::experimental::coroutine_traits<std::future<void>, Args...> {
            } 
   }; 
 }; 
-template <typename R, typename... Args> 
-struct std::experimental::coroutine_traits<std::future<R>, Args...> { 
-  struct promise_type { 
-    std::promise<R> p; 
-    void unhandled_exception() {}
-    auto get_return_object() { 
-        return p.get_future(); 
-    } 
-    std::experimental::suspend_never initial_suspend() { return {}; } 
-    std::experimental::suspend_never final_suspend() { return {}; } 
-    void set_exception(std::exception_ptr e) { 
-        p.set_exception(std::move(e)); 
-    } 
-    template <typename U> 
-    void return_value(U &&u) { 
-      p.set_value(std::forward<U>(u)); 
-    } 
-  }; 
-}; 
 template <typename R, typename P> 
 auto async_await(system_timer& t, std::chrono::duration<R, P> d) { 
     struct Awaiter { 
