@@ -48,3 +48,51 @@ int main() {
         std::cout << g.current_value() << std::endl;
     return 0;
 }
+/*
+#include <future>
+#include <iostream>
+#include <experimental/coroutine>
+
+template <typename... Args> 
+struct std::experimental::coroutine_traits<std::future<void>, Args...> { 
+  struct promise_type { 
+           std::promise<void> p;
+           void unhandled_exception() {}
+           auto get_return_object() { return p.get_future(); } 
+           std::experimental::suspend_never initial_suspend() { return {}; } 
+           std::experimental::suspend_never final_suspend() { return {}; } 
+           void set_exception(std::exception_ptr e) { p.set_exception(std::move(e)); } 
+           void return_void() { p.set_value(); } 
+  }; 
+}; 
+
+template <typename R, typename... Args> 
+struct std::experimental::coroutine_traits<std::future<R>, Args...> { 
+  struct promise_type { 
+    std::promise<R> p; 
+    void unhandled_exception() {}
+    auto get_return_object() { return p.get_future(); } 
+    std::experimental::suspend_never initial_suspend() { return {}; } 
+    std::experimental::suspend_never final_suspend() { return {}; } 
+    void set_exception(std::exception_ptr e) { p.set_exception(std::move(e)); } 
+    template <typename U> void return_value(U &&u) { 
+      p.set_value(std::forward<U>(u)); 
+    } 
+  }; 
+}; 
+
+std::future<void> f() { 
+  puts("Hi!"); 
+  co_return; 
+} 
+  
+std::future<int> g() { 
+  co_return 42; 
+} 
+
+int main() {
+    f().get(); 
+    printf("%d\n", g().get()); 
+    return 0;
+}
+*/
