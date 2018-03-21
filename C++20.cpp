@@ -36,7 +36,7 @@ namespace std {
         using rebind = typename rebind_to<U>::type;
         template<class U>
         static pointer pointer_to(U& v) noexcept {
-            return pointer(&v);
+            return pointer{ &v };
         }
         static element_type* to_address(const pointer& v) noexcept {
             return v.get();
