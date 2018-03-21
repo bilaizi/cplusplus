@@ -115,7 +115,10 @@ int main(){
 /*
 #include <iostream>
 #include <type_traits>
- 
+
+template <typename T, typename U>
+struct decay_equiv : std::is_same<std::decay_t<T>, U>::type{};
+
 int main(){
     std::cout << std::boolalpha
               << std::is_same_v<std::remove_cvref_t<int>, int> << '\n'
@@ -124,13 +127,37 @@ int main(){
               << std::is_same_v<std::remove_cvref_t<const int&>, int> << '\n'
               << std::is_same_v<std::remove_cvref_t<const int[2]>, int[2]> << '\n'
               << std::is_same_v<std::remove_cvref_t<const int(&)[2]>, int[2]> << '\n'
-              << std::is_same_v<std::remove_cvref_t<int(int)>, int(int)> << '\n';
-}
+              << std::is_same_v<std::remove_cvref_t<int(int)>, int(int)> << '\n'
+              << std::is_same_v<std::remove_cvref_t<int[2]>, int*> << '\n'
+              << std::is_same_v<std::remove_cvref_t<int(int)>, int(*)(int)> << '\n' << '\n';
+    std::cout << std::boolalpha
+              << decay_equiv<int, int>::value << '\n'
+              << decay_equiv<int&, int>::value << '\n'
+              << decay_equiv<int&&, int>::value << '\n'
+              << decay_equiv<const int&, int>::value << '\n'
+              << decay_equiv<const int[2], int[2]>::value << '\n'
+              << decay_equiv<const int(&)[2], int[2]>::value << '\n'
+              << decay_equiv<int(int), int(int)>::value << '\n'  
+              << decay_equiv<int[2], int*>::value << '\n'
+              << decay_equiv<int(int), int(*)(int)>::value << '\n';
+} 
 true
 true
 true
 true
 true
+true
+true
+false
+false
+
+true
+true
+true
+true
+false
+false
+false
 true
 true
 */
