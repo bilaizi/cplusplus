@@ -113,4 +113,79 @@ int main() {
     printf("%d\n", g().get()); 
     return 0;
 }
+
+#include <chrono>
+#include <future>
+#include <iostream>
+#include <experimental/coroutine>
+#include <boost/asio/ts/io_context.hpp>
+#include <boost/asio/ts/timer.hpp>
+using namespace std::chrono_literals;
+using namespace boost::asio;
+
+template <typename... Args> 
+struct std::experimental::coroutine_traits<std::future<void>, Args...> { 
+  struct promise_type { 
+           std::promise<void> p;
+           void unhandled_exception() {}
+           auto get_return_object() { 
+               return p.get_future(); 
+           } 
+           std::experimental::suspend_never initial_suspend() { return {}; } 
+           std::experimental::suspend_never final_suspend() { return {}; } 
+           void set_exception(std::exception_ptr e) { 
+               p.set_exception(std::move(e)); 
+           } 
+           void return_void() { 
+               p.set_value();
+           } 
+  }; 
+}; 
+template <typename R, typename... Args> 
+struct std::experimental::coroutine_traits<std::future<R>, Args...> { 
+  struct promise_type { 
+    std::promise<R> p; 
+    void unhandled_exception() {}
+    auto get_return_object() { 
+        return p.get_future(); 
+    } 
+    std::experimental::suspend_never initial_suspend() { return {}; } 
+    std::experimental::suspend_never final_suspend() { return {}; } 
+    void set_exception(std::exception_ptr e) { 
+        p.set_exception(std::move(e)); 
+    } 
+    template <typename U> 
+    void return_value(U &&u) { 
+      p.set_value(std::forward<U>(u)); 
+    } 
+  }; 
+}; 
+template <typename R, typename P> 
+auto async_await(system_timer& t, std::chrono::duration<R, P> d) { 
+    struct Awaiter { 
+        system_timer& t; 
+        std::chrono::duration<R, P> d; 
+        boost::system::error_code ec; 
+        bool await_ready() { return d.count() == 0; } 
+        void await_resume() { 
+           if (ec) 
+               throw boost::system::system_error(ec); 
+        } 
+        void await_suspend(std::experimental::coroutine_handle<> coro) { 
+            t.expires_from_now(d); 
+            t.async_wait([this, coro] (auto ec) mutable { this->ec = ec; coro.resume(); }); 
+        } 
+   }; 
+   return Awaiter{ t, d }; 
+} 
+
+std::future<void> sleepy(io_context& io) { 
+    system_timer timer{ io }; 
+    co_await async_await(timer, 100ms); 
+    puts("tick1"); 
+    co_await async_await(timer, 100ms); 
+    puts("tick2"); 
+    co_await async_await(timer, 100ms); 
+    puts("tick3"); 
+}
 */
