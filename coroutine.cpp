@@ -150,7 +150,7 @@ auto async_await(system_timer& t, std::chrono::duration<R, P> d) {
         bool await_ready() { return d.count() == 0; } 
         void await_resume() { 
            if (ec) 
-               throw boost::system::system_error(ec); 
+               throw boost::system::system_error{  ec }; 
         } 
         void await_suspend(std::experimental::coroutine_handle<> coro) { 
             t.expires_after(d); 
