@@ -126,4 +126,11 @@ int main(){
               << std::is_same_v<std::remove_cvref_t<const int(&)[2]>, int[2]> << '\n'
               << std::is_same_v<std::remove_cvref_t<int(int)>, int(int)> << '\n';
 }
+true
+true
+true
+true
+true
+true
+true
 */
