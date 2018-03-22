@@ -82,5 +82,13 @@ would lead to an ill-formed (compiler-internal) declaration of that specializati
 just silently ignore that template as is if the compiler has never seen it. 
 In another words, the compiler will pretend that wasn’t the template it was looking for. 
 
+With the advent of type query features such as decltype and auto, 
+the validity of a function type now entails the validity of expressions, 
+since whether decltype(expr) is a valid type depends on whether the operand expr is well-formed.  
+Hence the term “Expression SFINAE”.  
+It is a little bit more involved 
+because now the compiler has to perform overload resolution 
+including potentially unbounded evaluation of constant expressions 
+while it is checking whether a type makes sense.
 
 */
