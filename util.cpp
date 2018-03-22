@@ -74,4 +74,13 @@ After C++17
 pair p{ 2, 4.5 };
 tuple t{ 4, 3, 2.5 };
 auto lck = lock_guard{ foo.mtx};
+
+SFINAE is an acronym for “substitution failure is not an error.” 
+It is derived from an arcane process used by C++ compilers during overload resolution.  
+At its core, the idea is quite simple: if a candidate function template’s specialization
+would lead to an ill-formed (compiler-internal) declaration of that specialization,
+just silently ignore that template as is if the compiler has never seen it. 
+In another words, the compiler will pretend that wasn’t the template it was looking for. 
+
+
 */
