@@ -86,9 +86,7 @@ With the advent of type query features such as decltype and auto,
 the validity of a function type now entails the validity of expressions, 
 since whether decltype(expr) is a valid type depends on whether the operand expr is well-formed.  
 Hence the term “Expression SFINAE”.  
-It is a little bit more involved 
-because now the compiler has to perform overload resolution 
-including potentially unbounded evaluation of constant expressions 
-while it is checking whether a type makes sense.
+It is a little bit more involved because now the compiler has to perform overload resolution 
+including potentially unbounded evaluation of constant expressions while it is checking whether a type makes sense.
 
 */
