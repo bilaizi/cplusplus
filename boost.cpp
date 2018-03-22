@@ -1294,4 +1294,52 @@ int main(int argc, char* argv[]){
     return 0;
 }
 
+// blocking_tcp_echo_server.cpp
+#include <cstdlib>
+#include <iostream>
+#include <thread>
+#include <boost/asio/ts/buffer.hpp>	
+#include <boost/asio/ts/io_context.hpp>
+#include <boost/asio/ts/net.hpp>
+using namespace boost::asio;
+using namespace boost::asio::ip;
+
+const int max_length = 1024;
+
+void session(tcp::socket sock){
+    try {
+        for (;;) {
+            char data[max_length];
+            boost::system::error_code error;
+            size_t length = sock.read_some(mutable_buffer{ data, sizeof data}, error);
+            if (error == boost::asio::error::eof)
+                break; // Connection closed cleanly by peer.
+            else if (error)
+                throw boost::system::system_error(error); // Some other error.
+            boost::asio::write(sock, const_buffer{ data, length });
+        }
+    } catch (std::exception& e) {
+        std::cerr << "Exception in thread: " << e.what() << "\n";
+    }
+}
+
+void server(io_context& io_context, unsigned short port){
+    tcp::acceptor a{ io_context, tcp::endpoint{ tcp::v4(), port } };
+    for (;;)
+        std::thread{ session, a.accept() }.detach();
+}
+
+int main(int argc, char* argv[]){
+    try {
+        if (argc != 2) {
+            std::cerr << "Usage: blocking_tcp_echo_server <port>\n";
+            return 1;
+        }
+        io_context io_context;
+        server(io_context, std::atoi(argv[1]));
+    }catch (std::exception& e){
+        std::cerr << "Exception: " << e.what() << "\n";
+    }
+    return 0;
+}
 */
