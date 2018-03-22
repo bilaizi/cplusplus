@@ -66,4 +66,12 @@ auto main(int argc,char** argv)->int{
 int main(int argc,char** argv){
     return 0;
 }
+Before C++17 
+pair<int, double> p{ 2, 4.5 };
+auto t = make_tuple(4, 3, 2.5);
+lock_guard<std::mutex> lck{ foo.mtx};
+After C++17 
+pair p{ 2, 4.5 };
+tuple t{ 4, 3, 2.5 };
+auto lck = lock_guard{ foo.mtx};
 */
