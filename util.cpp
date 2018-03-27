@@ -74,6 +74,7 @@ for(const int b : a);//for(const auto b : a);a is unmodified
 
 #include <iostream>
 #include <memory>
+#include <typeinfo>
 using namespace std;
 
 auto main() -> int {
