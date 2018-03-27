@@ -72,6 +72,40 @@ for(int b : a);//for(auto b : a);a is unmodified
 for(const int& b : a);//for(const auto& b : a); a is modified
 for(const int b : a);//for(const auto b : a);a is unmodified
 
+#include <iostream>
+#include <memory>
+using namespace std;
+
+auto main() -> int {
+    auto sp = make_shared<int>(1234);
+    auto wp = weak_ptr<int>{ sp };
+    if(wp.expired())
+        cout << "wp is expired" << endl;
+    else
+        cout << "wp is not expired" << endl;
+    cout << "wp pointing counter = " << wp.use_count() << endl;
+    if(auto locked = wp.lock())
+        cout << "wp is locked. Value = " << *locked << endl;
+    else {
+        cout << "wp is unlocked" << endl;
+        wp.reset();
+    }
+    cout << endl;
+    sp = nullptr;
+    if(wp.expired())
+        cout << "wp is expired" << endl;
+    else
+        cout << "wp is not expired" << endl;
+    cout << "wp pointing counter = " << wp.use_count() << endl;
+    if(auto locked = wp.lock())
+        cout << "wp is locked. Value = " << *locked << endl;
+    else {
+        cout << "wp is unlocked" << endl;
+        wp.reset();
+    }
+    cout << endl;
+    return 0;
+}
 
 Before C++17 
 pair<int, double> p{ 2, 4.5 };
