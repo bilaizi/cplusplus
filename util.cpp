@@ -69,6 +69,7 @@ int main(int argc,char** argv){
 int a[];
 for(int& b : a);//for(auto& b : a); a is modified
 for(int b : a);//for(auto b : a);a is unmodified
+for(const int b : a);//for(const auto b : a);a is unmodified
 
 
 Before C++17 
