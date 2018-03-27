@@ -66,6 +66,11 @@ auto main(int argc,char** argv)->int{
 int main(int argc,char** argv){
     return 0;
 }
+int a[];
+for(int& b : a);//for(auto& b : a); a is modified
+for(int b : a);//for(auto b : a);a is unmodified
+
+
 Before C++17 
 pair<int, double> p{ 2, 4.5 };
 auto t = make_tuple(4, 3, 2.5);
