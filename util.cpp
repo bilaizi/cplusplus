@@ -104,6 +104,14 @@ auto main() -> int {
         wp.reset();
     }
     cout << endl;
+    auto a = 1;
+    auto b = 1.0;
+    auto c = a + b;
+    auto d = {b, c};
+    std::cout << "type of a: " << typeid(a).name() << std::endl;
+    std::cout << "type of b: " << typeid(b).name() << std::endl;
+    std::cout << "type of c: " << typeid(c).name() << std::endl;
+    std::cout << "type of d: " << typeid(d).name() << std::endl;
     return 0;
 }
 wp is not expired
@@ -113,7 +121,11 @@ wp is locked. Value = 1234
 wp is expired
 wp pointing counter = 0
 wp is unlocked
-
+ 
+type of a: i
+type of b: d
+type of c: d
+type of d: St16initializer_listIdE
 
 
 Before C++17 
