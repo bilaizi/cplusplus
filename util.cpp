@@ -106,6 +106,15 @@ auto main() -> int {
     cout << endl;
     return 0;
 }
+wp is not expired
+wp pointing counter = 1
+wp is locked. Value = 1234
+
+wp is expired
+wp pointing counter = 0
+wp is unlocked
+
+
 
 Before C++17 
 pair<int, double> p{ 2, 4.5 };
