@@ -36,13 +36,13 @@ bool navigate(vector<vector<char>>& labyrinth, int row, int col) {
     }
     else if (labyrinth[row][col] == ' ')
         labyrinth[row][col] = '*';
-    if ((row + 1 < rows) && navigate(labyrinth, row + 1, col))
-        return true;
     if ((col + 1 < cols) && navigate(labyrinth, row, col + 1))
         return true;
-    if ((row - 1 >= 0) && navigate(labyrinth, row - 1, col))
+    if ((row + 1 < rows) && navigate(labyrinth, row + 1, col))
         return true;
     if ((col - 1 >= 0) && navigate(labyrinth, row, col - 1))
+        return true;
+    if ((row - 1 >= 0) && navigate(labyrinth, row - 1, col))
         return true;
     return false;
 }
