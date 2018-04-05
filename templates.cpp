@@ -1,3 +1,21 @@
+#include <iostream>
+using namespace std;
+
+class MyClass {
+ public:
+  static int si;
+  const static double csd;
+  const static int csi = 5;
+};
+int MyClass::si = 1;
+const double MyClass::csd = 1.23;
+
+int main(){
+    std::cout << MyClass::si << std::endl; 
+    std::cout << MyClass::csd << std::endl; 
+    std::cout << MyClass::csi  << std::endl; 
+}
+
 // Class template specialization
 #include <iostream>
  
