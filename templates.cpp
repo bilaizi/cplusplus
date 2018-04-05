@@ -45,3 +45,8 @@ auto main() -> int {
     myBox<int> b = { 20 };
     b.print(); // 20
 }
+
+// Variable templates
+template<class T> constexpr T pi = T{ 3.1415926535897932384626433L };
+int i = pi<int>; // 3
+float f = pi<float>; // 3.14
