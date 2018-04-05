@@ -65,6 +65,15 @@ auto main() -> int {
 }
 
 // Variable templates
-template<class T> constexpr T pi = T{ 3.1415926535897932384626433L };
-int i = pi<int>; // 3
-float f = pi<float>; // 3.14
+#include <iostream>
+
+// Variable templates
+template<class T> 
+constexpr T pi = T(3.1415926535897932384626433L);
+
+int main(){
+    int i = pi<int>; // 3
+    float f = pi<float>; // 3.14
+    std::cout << i << std::endl; 
+    std::cout << f << std::endl; 
+}
