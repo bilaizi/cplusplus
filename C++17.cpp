@@ -39,8 +39,10 @@ auto main() -> int {
 	const char* raw = "test.ext";
 	size_t length = 8;
 	cout << "C++ string_view: " << extractExtension(string_view(raw, length)) << endl;
-	// Assigning the result to a std::string.
-	string extension = string { extractExtension(fileName) };//string extension = extractExtension(fileName).data();
+	/* Assigning the result to a std::string. */
+	// string extension = extractExtension(fileName).data();
+	// cout << extension  << endl;
+	string extension = string { extractExtension(fileName) };
 	cout << extension  << endl;
 	return 0;
 } 
