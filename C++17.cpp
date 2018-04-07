@@ -1,4 +1,4 @@
-#include <array>
+Literal: .ext#include <array>
 #include <charconv>
 #include <iostream>
 #include <string_view>
@@ -27,14 +27,14 @@ string_view extractExtension(string_view fileName){
 	return fileName.substr(fileName.rfind('.'));
 }
 auto main() -> int {
-	// C++ std::string.
-	string fileName = R"(c:\temp\my file.ext)";
-	cout << "C++ string: " << extractExtension(fileName) << endl;
+	// String literal.
+	cout << "Literal: " << extractExtension(R"(c:\temp\my file.ext)") << endl;
 	// C-style string.
 	const char* cString = R"(c:\temp\my file.ext)";
 	cout << "C string: " << extractExtension(cString) << endl;
-	// String literal.
-	cout << "Literal: " << extractExtension(R"(c:\temp\my file.ext)") << endl;
+	// C++ std::string.
+	string fileName = R"(c:\temp\my file.ext)";
+	cout << "C++ string: " << extractExtension(fileName) << endl;
 	// Raw string buffer with given length.
 	const char* raw = "test.ext";
 	size_t length = 8;
@@ -47,9 +47,9 @@ auto main() -> int {
 	return 0;
 } 
 /*
-C++ string: .ext
-C string: .ext
 Literal: .ext
+C string: .ext
+C++ string: .ext
 C++ string_view: .ext
 .ext
 */
