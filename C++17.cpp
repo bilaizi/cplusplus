@@ -1,4 +1,4 @@
-Literal: .ext#include <array>
+#include <array>
 #include <charconv>
 #include <iostream>
 #include <string_view>
@@ -10,7 +10,7 @@ auto main() -> int {
 	std::from_chars(str.data(), str.data()+str.size(), result);
 	std::cout << result << std::endl;
 	if(auto [ptr, ec] = std::to_chars(str.data(), str.data() + str.size(), result); ec == std::errc{})
-		std::cout << std::string_view(str.data(), ptr - str.data()) << std::endl;
+		std::cout << std::string_view{ str.data(), static_cast<size_t>(ptr - str.data()) } << std::endl;
 	return 0;
 }
 /*
@@ -23,7 +23,7 @@ auto main() -> int {
 #include <iostream>
 using namespace std;
 
-string_view extractExtension(string_view fileName){
+string_view extractExtension(string_view fileName) {
 	return fileName.substr(fileName.rfind('.'));
 }
 auto main() -> int {
@@ -38,7 +38,7 @@ auto main() -> int {
 	// Raw string buffer with given length.
 	const char* raw = "test.ext";
 	size_t length = 8;
-	cout << "C++ string_view: " << extractExtension(string_view(raw, length)) << endl;
+	cout << "C++ string_view: " << extractExtension(string_view{ raw, length }) << endl;
 	/* Assigning the result to a std::string. */
 	// string extension = extractExtension(fileName).data();
 	// cout << extension  << endl;
