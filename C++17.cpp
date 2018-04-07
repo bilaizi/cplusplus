@@ -21,13 +21,11 @@ auto main() -> int {
 #include <string>
 #include <string_view>
 #include <iostream>
-
 using namespace std;
 
 string_view extractExtension(string_view fileName){
 	return fileName.substr(fileName.rfind('.'));
 }
-
 auto main() -> int {
 	// C++ std::string.
 	string fileName = R"(c:\temp\my file.ext)";
