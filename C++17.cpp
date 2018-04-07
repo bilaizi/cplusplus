@@ -38,14 +38,16 @@ auto main() -> int {
 	// Raw string buffer with given length.
 	const char* raw = "test.ext";
 	size_t length = 8;
-	cout << "Raw: " << extractExtension(string_view(raw, length)) << endl;
+	cout << "C++ string_view: " << extractExtension(string_view(raw, length)) << endl;
 	// Assigning the result to a std::string.
 	string extension = extractExtension(fileName).data();
+	cout << extension  << endl;
 	return 0;
 } 
 /*
 C++ string: .ext
 C string: .ext
 Literal: .ext
-Raw: .ext
+C++ string_view: .ext
+.ext
 */
