@@ -12,3 +12,7 @@ auto main() -> int {
 	if(auto [ptr, ec] = std::to_chars(str.data(), str.data() + str.size(), result); ec == std::errc{})
 		std::cout << std::string_view(str.data(), ptr - str.data()) << std::endl;
 }
+/*
+42
+42
+*/
