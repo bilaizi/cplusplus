@@ -40,8 +40,7 @@ auto main() -> int {
 	size_t length = 8;
 	cout << "C++ string_view: " << extractExtension(string_view(raw, length)) << endl;
 	// Assigning the result to a std::string.
-	string extension = extractExtension(fileName).data();
-	string extension = string { extractExtension(fileName) };
+	string extension = string { extractExtension(fileName) };//string extension = extractExtension(fileName).data();
 	cout << extension  << endl;
 	return 0;
 } 
