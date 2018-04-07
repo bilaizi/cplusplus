@@ -13,6 +13,6 @@ auto main() -> int {
 		std::cout << std::string_view(str.data(), ptr - str.data()) << std::endl;
 }
 /*
-42
+42 
 42
 */
