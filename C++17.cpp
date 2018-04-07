@@ -8,7 +8,7 @@ auto main() -> int {
 	std::array<char, 10> str{ "42" };
 	int result;
 	std::from_chars(str.data(), str.data()+str.size(), result);
-	std::cout << result;
+	std::cout << result << std::endl;
 	if(auto [ptr, ec] = std::to_chars(str.data(), str.data() + str.size(), result); ec == std::errc{})
-		std::cout << std::string_view(str.data(), ptr - str.data());
+		std::cout << std::string_view(str.data(), ptr - str.data()) << std::endl;
 }
