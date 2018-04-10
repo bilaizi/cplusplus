@@ -12,6 +12,7 @@ private:
 SpreadsheetCell::SpreadsheetCell(double value):value{ value } {}
 // SpreadsheetCell::SpreadsheetCell(const SpreadsheetCell& other) = default;
 SpreadsheetCell::SpreadsheetCell(const SpreadsheetCell& other) : value{ other.value } { }
+// SpreadsheetCell& SpreadsheetCell::operator=(constSpreadsheetCell& other) = default;
 SpreadsheetCell& SpreadsheetCell::operator=(constSpreadsheetCell& other) {
 	if (this == &other) {
 		return *this;
