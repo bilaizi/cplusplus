@@ -9,6 +9,9 @@ private:
 	double value;
 };
 SpreadsheetCell::SpreadsheetCell(double value):value{ value } {}
+SpreadsheetCell::SpreadsheetCell(const SpreadsheetCell& other)
+	: value{ other.value } {
+}
 void SpreadsheetCell::setValue(double value) {
 	this->value = value;
 }
