@@ -108,5 +108,6 @@ const SpreadsheetCell& Spreadsheet::getCellAt(size_t x, size_t y) const  {
 }
 
 SpreadsheetCell& Spreadsheet::getCellAt(size_t x, size_t y){
+	// pre c++17:return const_cast<SpreadsheetCell&>(static_cast<const Spreadsheet&>(*this).getCellAt(x, y));
 	return const_cast<SpreadsheetCell&>(std::as_const(*this).getCellAt(x, y));
 }
