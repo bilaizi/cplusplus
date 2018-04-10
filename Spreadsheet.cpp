@@ -26,3 +26,15 @@ void SpreadsheetCell::setValue(d ouble value) {
 double SpreadsheetCell::getValue() const {
 	return this->value;
 }
+
+class Spreadsheet {
+public:
+	Spreadsheet(size_t width, size_t height);
+	void setCellAt(size_t x, size_t y, const SpreadsheetCell& cell);
+	SpreadsheetCell& getCellAt(size_t x, size_t y);
+private:
+	bool inRange(size_t value, size_t upper) const;
+	size_t mWidth = 0;
+	size_t mHeight = 0;
+	SpreadsheetCell** mCells = nullptr;
+};
