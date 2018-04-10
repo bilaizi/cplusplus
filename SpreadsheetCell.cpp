@@ -12,6 +12,7 @@ SpreadsheetCell::SpreadsheetCell(double value):value{ value } {}
 SpreadsheetCell::SpreadsheetCell(const SpreadsheetCell& other)
 	: value{ other.value } {
 }
+// SpreadsheetCell::SpreadsheetCell(const SpreadsheetCell& other) = default;
 void SpreadsheetCell::setValue(double value) {
 	this->value = value;
 }
