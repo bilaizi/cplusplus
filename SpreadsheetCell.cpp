@@ -16,7 +16,7 @@ SpreadsheetCell& SpreadsheetCell::operator=(constSpreadsheetCell& other) {
 	if (this == &other) {
 		return *this;
 	}
-	this->value = other.value;
+	value = other.value;
 	return *this;
 }
 void SpreadsheetCell::setValue(d ouble value) {
