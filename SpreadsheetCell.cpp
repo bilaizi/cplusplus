@@ -6,7 +6,7 @@ public:
 private:
 	double value;
 };
-SpreadsheetCell::SpreadsheetCell(double value):value{value} {}
+SpreadsheetCell::SpreadsheetCell(double value):value{ value } {}
 void SpreadsheetCell::setValue(double value) {
 	this->value = value;
 }
