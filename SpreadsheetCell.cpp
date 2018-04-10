@@ -1,6 +1,7 @@
 class SpreadsheetCell {
 public:
 	SpreadsheetCell(double value);
+	SpreadsheetCell(const SpreadsheetCell& other);
 	void setValue(double value);
 	double getValue() const;
 private:
