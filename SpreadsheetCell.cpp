@@ -1,5 +1,6 @@
 class SpreadsheetCell {
 public:
+	SpreadsheetCell() = default;
 	SpreadsheetCell(double value);
 	SpreadsheetCell(const SpreadsheetCell& other);
 	void setValue(double value);
