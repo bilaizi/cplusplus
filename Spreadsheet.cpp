@@ -24,7 +24,7 @@ SpreadsheetCell& SpreadsheetCell::operator=(constSpreadsheetCell& other) {
 void SpreadsheetCell::setValue(d ouble value) {
 	this->value = value;
 }
-double SpreadsheetCell::getValue() const {
+inline double SpreadsheetCell::getValue() const {
 	counter++;
 	return this->value;
 }
