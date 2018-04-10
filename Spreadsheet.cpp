@@ -8,7 +8,7 @@ public:
 	double getValue() const;
 private:
 	double value;
-	mutable size_t numAccesses = 0;
+	mutable size_t counter = 0;
 };
 SpreadsheetCell::SpreadsheetCell(double value):value{ value } {}
 // SpreadsheetCell::SpreadsheetCell(const SpreadsheetCell& other) = default;
@@ -25,6 +25,7 @@ void SpreadsheetCell::setValue(d ouble value) {
 	this->value = value;
 }
 double SpreadsheetCell::getValue() const {
+	counter++;
 	return this->value;
 }
 
