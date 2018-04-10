@@ -1,13 +1,7 @@
-#include <string>
-
-class SpreadsheetCell{
+class SpreadsheetCell {
 public:
-void setValue(double inValue);
-double getValue() const;
-void setString(std::string_view inString);
-std::string getString() const;
+	void setValue(double value);
+	double getValue() const;
 private:
-std::string doubleToString(double inValue) const;
-double stringToDouble(std::string_view inString) const;
-double mValue;
+	double value;
 };
