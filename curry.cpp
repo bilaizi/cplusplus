@@ -14,13 +14,26 @@ int areaOfRectangle(int length, int width) {
         return length * width;
 }
 
+int volumeOfRectangular(int length, int width, int height) {
+        return length * width * height;
+}
+
 auto main() -> int {
-    cout << "[curry.cpp]" << endl;
-    auto length5 = curry(areaOfRectangle, 5);
-    cout << "Curried with specific length = 5" << endl;
-    for(int i{ 0 }; i <= 5; ++i) {
-        cout << "length5(" << i << ") = ";
-        cout << length5(i) << endl;
-    }
-    return 0;
+        cout << "[curry.cpp]" << endl;
+        auto length5 = curry(areaOfRectangle, 5);
+        cout << "Curried with specific data:" << endl;
+        cout << "length = 5" << endl;
+        for(int i{ 0 }; i <= 5; ++i) {
+                cout << "length5(" << i << ") = ";
+                cout << length5(i) << endl;
+        }
+        
+        auto length5width4 = curry(volumeOfRectangular, 5, 4);
+        cout << "Curried with specific data:" << endl;
+        cout << "length = 5, width = 4" << endl;
+        for(int i = 0; i <= 5; ++i) {
+                cout << "length5width4(" << i << ") = ";
+                cout << length5width4(i) << endl;
+        }
+        return 0;
 }
