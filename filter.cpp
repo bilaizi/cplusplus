@@ -35,5 +35,25 @@ auto main() -> int {
         cout << "The primes numbers: " << endl;
         copy(begin(primes), end(primes), ostream_iterator<int>(cout, " "));
         cout << endl;
+        // Declaring a vector containing int elements
+        vector<int> nonPrimes;
+        // Filtering the vector
+        remove_copy_if(begin(numbers), end(numbers), back_inserter(nonPrimes), 
+                [](int n) {
+                        if(n < 2)
+                                return false;
+                        else {
+                                for (int j = 2; j < n; ++j) {
+                                        if (n % j == 0)
+                                                return false;
+                                }
+                                return true;
+                        }
+                }
+        );
+        // Displaying the elements of nonPrimes using copy() function
+        cout << "The non-primes numbers: " << endl;
+        copy(begin(nonPrimes), end(nonPrimes), ostream_iterator<int>(cout, " "));
+        cout << endl;
         return 0;
 }
