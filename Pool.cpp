@@ -61,6 +61,6 @@ int main() {
     std::cout << sizeof(std::unique_ptr<int, void(*)(int*)>) << "\n"; //16
 
     //With a std::function. Much more expensive.
-    std::cout << sizeof(std::unique_ptr<int, std::function<void(int*)>>) << "\n"; //64
+    std::cout << sizeof(std::unique_ptr<int, std::function<void(int*)>>) << "\n"; //40
     return 0;
  }
