@@ -35,4 +35,5 @@ int main() {
         std::cout << Tracker::NumOpenFiles << "\n"; //1
     }//End Block. File Closed.
     std::cout << Tracker::NumOpenFiles << "\n"; //0
+    return 0;
 }
