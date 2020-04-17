@@ -1,3 +1,4 @@
+#include <iostream>
 #include <memory>
 
 struct Resource {
@@ -45,5 +46,21 @@ int main() {
         }
         //Resource is freed.
     }
+    //With default function object (std::default_delete). 
+    std::cout << sizeof(std::unique_ptr<int>) << "\n"; //8
+
+    //With a custom empty function object. 
+    struct CD { void operator()(int* p) { delete p; } };
+    std::cout << sizeof(std::unique_ptr<int, CD>) << "\n"; //8
+
+    //With a capture-less lambda. 
+    auto l = [](int* p) { delete p; };
+    std::cout << sizeof(std::unique_ptr<int, decltype(l)>) << "\n"; //8 
+
+    //With a function pointer. 
+    std::cout << sizeof(std::unique_ptr<int, void(*)(int*)>) << "\n"; //16
+
+    //With a std::function. Much more expensive.
+    std::cout << sizeof(std::unique_ptr<int, std::function<void(int*)>>) << "\n"; //64
     return 0;
  }
